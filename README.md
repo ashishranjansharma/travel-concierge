@@ -270,6 +270,68 @@ To delete the agent, run the following command (using the resource ID returned p
 python3 deployment/deploy.py --delete --resource_id=<RESOURCE_ID>
 ```
 
+### Deployment Options
+
+The Travel Concierge can be deployed in several ways:
+
+#### 1. Vertex AI Agent Engine (Recommended for Production)
+Deploy directly to Google Cloud's Vertex AI Agent Engine for scalable, managed deployment:
+
+```bash
+# Quick deployment with automated setup
+./deploy-vertex.sh
+
+# Or manual deployment
+poetry install --with deployment
+poetry run python deployment/deploy.py --create
+```
+
+**Features:**
+- Fully managed by Google Cloud
+- Automatic scaling
+- Built-in monitoring and logging
+- High availability
+- Pay-per-use pricing
+
+#### 2. Docker Container (Local/Cloud)
+Deploy using Docker containers for flexible deployment options:
+
+```bash
+# Local development
+docker-compose up --build
+
+# Production with nginx
+docker-compose --profile production up -d
+```
+
+**Features:**
+- Portable across environments
+- Easy local development
+- Can be deployed to any container platform
+- Full control over infrastructure
+
+#### 3. Cloud Build (Automated CI/CD)
+Set up automated deployment via Google Cloud Build:
+
+```bash
+# Create Cloud Build trigger
+gcloud builds triggers create github \
+  --repo-name=travel-concierge \
+  --repo-owner=YOUR_GITHUB_USERNAME \
+  --branch-pattern="^main$" \
+  --build-config=cloudbuild.yaml
+```
+
+**Features:**
+- Automated deployment on code changes
+- Integration with GitHub/GitLab
+- Consistent deployment process
+- Built-in rollback capabilities
+
+For detailed deployment instructions, see:
+- [Vertex AI Deployment Guide](VERTEX_AI_DEPLOYMENT.md)
+- [Container Deployment Guide](DEPLOYMENT.md)
+
 ## Application Development
 
 ### Callbacks and initial State

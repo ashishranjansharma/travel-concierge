@@ -1,0 +1,16 @@
+# Deployment requirements for Vertex AI Agent Engine
+# These are additional dependencies needed for deployment
+
+# Google Cloud AI Platform
+google-cloud-aiplatform>=1.93.0
+
+# Google Cloud Storage (for uploading agent code)
+google-cloud-storage>=2.18.0
+
+# Authentication
+google-auth>=2.14.1
+google-auth-oauthlib>=1.0.0
+google-auth-httplib2>=0.2.0
+
+# Additional utilities for deployment
+requests>=2.32.0

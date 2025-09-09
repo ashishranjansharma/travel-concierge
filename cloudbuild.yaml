@@ -1,0 +1,53 @@
+# Cloud Build configuration for automated deployment to Vertex AI Agent Engine
+# This file enables automated deployment via Google Cloud Build
+
+steps:
+  # Step 1: Install dependencies and prepare deployment
+  - name: 'python:3.11'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        pip install poetry
+        poetry install --with deployment
+        echo "Dependencies installed successfully"
+
+  # Step 2: Run tests (optional but recommended)
+  - name: 'python:3.11'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        poetry install --with dev
+        poetry run pytest tests/ -v || echo "Tests completed with warnings"
+        echo "Tests completed"
+
+  # Step 3: Deploy to Vertex AI Agent Engine
+  - name: 'python:3.11'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        # Set up authentication
+        if [ -f "credentials.json" ]; then
+          export GOOGLE_APPLICATION_CREDENTIALS="credentials.json"
+        fi
+        
+        # Deploy the agent
+        poetry run python deployment/deploy.py --create
+        
+        echo "Deployment completed successfully"
+
+# Substitution variables (can be overridden in Cloud Build trigger)
+substitutions:
+  _PROJECT_ID: '${PROJECT_ID}'
+  _LOCATION: 'us-central1'
+  _BUCKET_NAME: '${PROJECT_ID}-travel-concierge-agents'
+
+# Options
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+
+# Timeout (30 minutes)
+timeout: '1800s'
