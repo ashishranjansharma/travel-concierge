@@ -149,3 +149,11 @@ poetry.lock
 
 # UV
 uv.lock
+
+# Docker
+.dockerignore
+credentials.json
+
+# Environment files (keep example)
+.env
+!.env.example
