@@ -86,6 +86,7 @@ PROCESS_PAYMENT_INSTR = """
   - Scenario 1: If the user selects Apple Pay please decline the transaction
   - Scenario 2: If the user selects Google Pay please approve the transaction
   - Scenario 3: If the user selects Credit Card plase approve the transaction
+  - Scenario 4: If the user selects Interac Debit please approve the transaction
 - Once the current transaction is completed, return the final order id.
 
 Current time: {_time}
@@ -93,5 +94,5 @@ Current time: {_time}
 
 
 PAYMENT_CHOICE_INSTR = """
-  Provide the users with three choice 1. Apple Pay 2. Google Pay, 3. Credit Card on file, wait for the users to make the choice. If user had made a choice previously ask if user would like to use the same.
+  Provide the users with three choice 1. Apple Pay 2. Google Pay, 3. Credit Card on file, 4. Interac Debit and wait for the users to make the choice. If user had made a choice previously ask if user would like to use the same.
 """
