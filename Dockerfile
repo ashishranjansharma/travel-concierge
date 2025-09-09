@@ -7,9 +7,8 @@ WORKDIR /app
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    POETRY_NO_INTERACTION=1 \
-    POETRY_VENV_IN_PROJECT=1 \
-    POETRY_CACHE_DIR=/tmp/poetry_cache
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -17,20 +16,15 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Poetry
-RUN pip install poetry==1.8.3
+# Copy all necessary files for package installation
+COPY pyproject.toml README.md ./
+COPY travel_concierge/ ./travel_concierge/
 
-# Copy poetry files
-COPY pyproject.toml poetry.lock ./
+# Install dependencies using pip (since project uses PEP 621 format)
+RUN pip install --no-cache-dir -e .
 
-# Install dependencies
-RUN poetry install --only=main --no-root && rm -rf $POETRY_CACHE_DIR
-
-# Copy application code
+# Copy remaining application code
 COPY . .
-
-# Install the application
-RUN poetry install --only=main
 
 # Copy and set up entrypoint script
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
@@ -51,4 +45,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Default command - can be overridden
-CMD ["poetry", "run", "adk", "web", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["adk", "web", "--host", "0.0.0.0", "--port", "8000"]
